@@ -1,3 +1,6 @@
+const _ = require('underscore');
+const DELIMITER = ': ';
+
 // Input: Array of strings defining dependencies
 // Output: Comma separated list of package names in the order of install
 
@@ -8,16 +11,12 @@ module.exports = {
    * @param {array} libraries - The list of libraries.
   **/
   parse(libraries = []) {
-    const packages = {};
+    return _.reduce(libraries, (memo, library) => {
+      const [key, value] = library.split(DELIMITER);
 
-    for (let i = 0; i < libraries.length; i++) {
-      const library = libraries[i];
-      const [key, value] = library.split(': ');
-
-      packages[key] = value;
-    }
-
-    return packages;
+      memo[key] = value;
+      return memo;
+    }, {});
   },
 
   /**
@@ -25,16 +24,12 @@ module.exports = {
    * @param {object} packages - Object of library-dependency key-value pairs
   **/
   sort(packages = {}) {
-    const order = [];
+    const order = _.keys(_.pick(packages, _.isEmpty));
+    packages = _.omit(packages, _.isEmpty);
 
-    for (const library in packages) {
-      if (packages[library] === '') {
-        order.push(library);
-        delete packages[library];
-      }
-    }
+    while (_.any(packages)) {
 
-    while (Object.keys(packages).length) {
+
       for (const library in packages) {
         if (order.indexOf(packages[library]) >= 0) {
           order.push(library);
@@ -48,5 +43,7 @@ module.exports = {
 
   install(packages = []) {
     return this.sort(this.parse(packages)).join(', ');
-  }
+  },
+
+
 };
