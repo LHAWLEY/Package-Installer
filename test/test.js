@@ -24,3 +24,13 @@ describe('#sort', function () {
     expect(index.sort(packages)).to.deep.eq(['mocha', 'chai']);
   });
 });
+
+describe('#install', function () {
+  it('returns a comma delimited string of libraries in the order they should be installed', function () {
+    const input = ['KittenService: ','Leetmeme: Cyberportal','Cyberportal: Ice','CamelCaser: KittenService','Fraudstream: Leetmeme','Ice: '];
+
+    expect(index.install(input)).to.deep.eq(
+      'KittenService, Ice, Cyberportal, CamelCaser, Leetmeme, Fraudstream'
+    );
+  });
+});

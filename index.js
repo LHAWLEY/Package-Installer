@@ -44,5 +44,9 @@ module.exports = {
     }
 
     return order;
+  },
+
+  install(packages = []) {
+    return this.sort(this.parse(packages)).join(', ');
   }
 };
