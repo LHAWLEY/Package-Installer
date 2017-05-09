@@ -14,4 +14,13 @@ describe('#parse', function () {
   });
 });
 
+describe('#sort', function () {
+  it('orders the packages so that dependencies come first', function () {
+    const packages = {
+      chai: 'mocha',
+      mocha: ''
+    };
 
+    expect(index.sort(packages)).to.deep.eq(['mocha', 'chai']);
+  });
+});

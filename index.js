@@ -8,15 +8,41 @@ module.exports = {
    * @param {array} libraries - The list of libraries.
   **/
   parse(libraries = []) {
-    const dependencies = {};
+    const packages = {};
 
     for (let i = 0; i < libraries.length; i++) {
       const library = libraries[i];
       const [key, value] = library.split(': ');
 
-      dependencies[key] = value;
+      packages[key] = value;
     }
 
-    return dependencies;
+    return packages;
+  },
+
+  /**
+   * Sorts an object of library-dependency key-value pairs so that dependencies come first
+   * @param {object} packages - Object of library-dependency key-value pairs
+  **/
+  sort(packages = {}) {
+    const order = [];
+
+    for (const library in packages) {
+      if (packages[library] === '') {
+        order.push(library);
+        delete packages[library];
+      }
+    }
+
+    while (Object.keys(packages).length) {
+      for (const library in packages) {
+        if (order.indexOf(packages[library]) >= 0) {
+          order.push(library);
+          delete packages[library];
+        }
+      }
+    }
+
+    return order;
   }
 };
